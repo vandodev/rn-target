@@ -1,3 +1,4 @@
+import { Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { styles } from './styles'
 import { colors } from '@/theme/colors'
@@ -7,6 +8,10 @@ export function HomeHeader() {
     <LinearGradient
       colors={[colors.blue[500], colors.blue[800]]}
       style={styles.container}
-    ></LinearGradient>
+    >
+        <View>
+            <Text style={styles.label}>Total que você possui</Text>
+        </View>
+    </LinearGradient>
   )
 }
