@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View ,StatusBar} from 'react-native'
 import { router } from 'expo-router'
 
 import { HomeHeader } from '@/components/HomeHeader'
@@ -33,8 +33,8 @@ const targets = [
 export default function Index() {
   return (
     <View style={{ flex: 1, }}>
-      <HomeHeader data={summary} />
-      
+      <StatusBar barStyle="light-content" />
+      <HomeHeader data={summary} />     
       
       <List
         title="Metas"
@@ -45,7 +45,7 @@ export default function Index() {
         containerStyle={{ paddingHorizontal: 24 }}
       />
 
-       <View style={{ padding: 24, paddingBottom: 50 }}>
+       <View style={{ padding: 24, paddingBottom: 32 }}>
         <Button title="Nova meta" onPress={() => router.navigate('/target')} />
       </View>
       
