@@ -3,6 +3,7 @@ import {View } from 'react-native'
 import { Input } from '@/components/Input'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
+import { CurrencyInput } from '@/components/CurrencyInput'
 
 export default function Target() {
   return (
@@ -23,6 +24,7 @@ export default function Target() {
           label="Nova meta"
           placeholder="Ex: Viagem para praia, Apple Watch"
         />
+        <CurrencyInput label='valor alvo' value={0} />
         <Button title="Salvar" />
       </View>
     </View>
