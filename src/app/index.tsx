@@ -40,7 +40,12 @@ export default function Index() {
         title="Metas"
         data={targets}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Target data={item} />}
+        renderItem={({ item }) =>
+          <Target 
+            data={item}
+            onPress={() => router.navigate(`/in-progress/${item.id}`)}
+          />
+        }
         emptyMessage="Nenhuma meta. Toque em nova meta para criar."
         containerStyle={{ paddingHorizontal: 24 }}
       />
