@@ -6,6 +6,7 @@ import { Input } from '@/components/Input'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { CurrencyInput } from '@/components/CurrencyInput'
+import { useTargetDatabase } from '@/database/useTargetDatabase'
 
 
 export default function Target() {
@@ -14,6 +15,7 @@ export default function Target() {
   const [amount, setAmount] = useState(0)
 
   const params = useLocalSearchParams<{ id?: string }>()
+  const targetDatabase = useTargetDatabase()
 
   function handleSave() {
     if (!name.trim() || amount <= 0) {
@@ -33,6 +35,7 @@ export default function Target() {
   }
 
   async function create() {
+    await targetDatabase.create({ name, amount })
     try {
       Alert.alert('Nova Meta', 'Meta criada com sucesso!', [
         {
