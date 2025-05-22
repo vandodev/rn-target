@@ -29,14 +29,19 @@ export function useTargetDatabase() {
     })
   }
 
-   function listBySavedValue() {
+  function listBySavedValue() {
     return database.getAllAsync<TargetResponse>(`
-        SELECT
-          targets.id,
-          targets.name,
-          targets.amount
-        FROM targets
-      `)
+      SELECT
+        targets.id,
+        targets.name,
+        targets.amount,
+        COALESCE (SUM(transactions.amount), 0) AS current,
+        COALESCE ((SUM(transactions.amount) / targets.amount) * 100, 0) AS percentage
+      FROM targets
+      LEFT JOIN transactions ON targets.id = transactions.target_id
+      GROUP BY targets.id, targets.name, targets.amount
+      ORDER BY current DESC
+    `)
   }
 
   return { create, listBySavedValue }
