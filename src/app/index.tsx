@@ -2,7 +2,7 @@ import { View ,StatusBar, Alert} from 'react-native'
 import { useCallback , useState} from 'react'
 import { router, useFocusEffect } from 'expo-router'
 
-import { HomeHeader } from '@/components/HomeHeader'
+import { HomeHeader, HomeHeaderProps } from '@/components/HomeHeader'
 import { Target, TargetProps } from '@/components/Target'
 import { List } from '@/components/List'
 import { Loading } from '@/components/Loading'
@@ -11,6 +11,7 @@ import { Button } from '@/components/Button'
 import { numberToCurrency } from '@/utils/numberToCurrency'
 
 import { useTargetDatabase } from '@/database/useTargetDatabase'
+import { useTransactionDatabase } from '@/database/useTransactionsDatabase'
 
 const summary = {
   total: 'R$ 2.680,00',
@@ -19,13 +20,16 @@ const summary = {
 }
 
 export default function Index() {
+  const [summary, setSummary] = useState<HomeHeaderProps>()
   const [targets, setTargets] = useState<TargetProps[]>([])
   const [isFetching, setIsFetching] = useState(true)
+
+  const transactionsDatabase = useTransactionDatabase()
   const targetDatabase = useTargetDatabase()
 
   async function fetchTargets() {
     try {
-      const response = await targetDatabase.listBySavedValue()
+      const response = await targetDatabase.listByClosestTarget()
       return response.map((item) => ({
         id: String(item.id),
         name: item.name,
@@ -39,11 +43,37 @@ export default function Index() {
     }
   }
 
-   async function fetchData() {
+  async function fetchSummary(): Promise<HomeHeaderProps> {
+    try {
+      const response = await transactionsDatabase.summary()
+
+      return {
+        total: numberToCurrency(response.input + response.output),
+        input: {
+          label: 'Entradas',
+          value: numberToCurrency(response.input),
+        },
+        output: {
+          label: 'Saídas',
+          value: numberToCurrency(response.output),
+        },
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar o resumo.')
+      console.log(error)
+    }
+  }
+
+  async function fetchData() {
     const targetDataPromise = fetchTargets()
+    const dataSummaryPromise = fetchSummary()
 
-    const [targetData] = await Promise.all([targetDataPromise])
+    const [targetData, dataSummary] = await Promise.all([
+      targetDataPromise,
+      dataSummaryPromise,
+    ])
 
+    setSummary(dataSummary)
     setTargets(targetData)
     setIsFetching(false)
   }
