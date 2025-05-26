@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Button, Text, View, Alert } from 'react-native'
+import { Button, StatusBar, View, Alert } from 'react-native'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router'
 
 import { PageHeader } from '@/components/PageHeader'
@@ -107,6 +107,7 @@ export default function InProgress() {
 
   return (
     <View style={{ flex: 1, padding: 24, gap: 32 }}>
+      <StatusBar barStyle="dark-content" />
       <PageHeader
         title={details.name}
         rightButton={{
